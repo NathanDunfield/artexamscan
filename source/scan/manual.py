@@ -16,7 +16,7 @@ def manual_process_page(page_path, roster):
 	
 	image = examscanuiuc.scan.image_from_pdf(page_path)
 	try:
-		exam_num, exam_pagenum, page_max = [int(p) for p in examscanuiuc.scan.read_page_id(image).split(b',')]  # !?!
+		exam_num, exam_pagenum, page_max = [int(p) for p in examscanuiuc.scan.read_page_id(image).split(b',')]
 	except examscanuiuc.scan.CouldNotGetQRCode:
 		print('Could not read QR code.')
 		exam_num = raw_input('Enter exam number: ')

@@ -36,7 +36,7 @@ def load_data(directory):
 def process_page(file_name, page_num, page_path, roster):
 	image = image_from_pdf(page_path)
 	try:
-		exam_num, exam_pagenum, page_max = [int(p) for p in read_page_id(image).split(b',')]  # !?!
+		exam_num, exam_pagenum, page_max = [int(p) for p in read_page_id(image).split(b',')]
 		message = ''
 		if exam_pagenum == 1:
 			state = UIN

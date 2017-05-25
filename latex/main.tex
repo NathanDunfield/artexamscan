@@ -1,0 +1,174 @@
+\documentclass[a4paper]{article}
+
+\usepackage{url}
+\usepackage{fullpage}
+\usepackage[percent]{overpic}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage{mdframed}
+\usepackage{examplep}
+\newcommand{\exc}[1]{\mbox{\PVerb{#1}}}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstset{frame=L,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  xleftmargin=0.5in,
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+\usepackage[colorlinks=true, urlcolor=blue]{hyperref}
+
+\title{ExamScanUIUC}
+\author{Mark C. Bell}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\begin{minipage}{0.9\linewidth}
+\begin{framed}
+To get, install and start the ExamScanUIUC application under Python using Pip:
+\begin{lstlisting}
+> python -m pip install examscanuiuc --user --upgrade
+> python -m examscanuiuc.tag [options] exam.pdf
+> python -m examscanuiuc.scan [options] scans.pdf
+\end{lstlisting}
+\end{framed}
+\end{minipage}
+\end{center}
+
+ExamScanUIUC is a python package for adding and analysing tags on exams.
+It can be run as a Python 2 or Python 3 module.
+
+\section{Getting ExamScanUIUC}
+
+ExamScanUIUC is available on the Python Package Index (PyPI). The preferred method for installing the latest stable release is to use Pip:
+\begin{lstlisting}
+> python -m pip install examscanuiuc --user --upgrade
+\end{lstlisting}
+Pip can be installed using \href{http://pip.readthedocs.org/en/latest/installing.html}{\texttt{get-pip.py}} and is included in Python 2.7.9 and Python 3.4 by default.
+
+\subsection{Dependencies}
+
+ExamScanUIUC requires several pieces of software. On Ubuntu these can be installed using:
+
+\begin{tabular}{ll}
+\href{https://poppler.freedesktop.org/}{\texttt{pdfimages}} & \texttt{apt-get install poppler-utils} \\
+\href{https://poppler.freedesktop.org/}{\texttt{pdftoppm}} &  \texttt{apt-get install poppler-utils} \\
+\href{http://zbar.sourceforge.net/}{\texttt{zbar}} & \texttt{apt-get install libzbar-dev libffi-dev}
+\end{tabular}
+
+\subsection{ExamScanUIUC development version}
+
+Although the latest stable release of ExamScanUIUC is available through PyPI, you can get the latest development version of flipper from \href{https://bitbucket.org/mark_bell/examscanuiuc}{Bitbucket} or straight from the Mercurial repository with the command:
+\begin{lstlisting}
+> hg clone https://bitbucket.org/mark_bell/examscanuiuc
+\end{lstlisting}
+To compile ExamScan use the command:
+\begin{lstlisting}
+> python setup.py install --user
+\end{lstlisting}
+
+\section{Example}
+
+ExamScanUIUC includes an example exam to try tagging and some scans of completed exams.
+To copy these into a \texttt{demo} folder in the current directory use the command:
+
+\begin{lstlisting}
+> python -m examscanuiuc.demo
+\end{lstlisting}
+
+In the following examples, we will assume that you have then moved within this folder by doing:
+\begin{lstlisting}
+> cd ./demo
+\end{lstlisting}
+
+\subsection{Tagging}
+
+To add tags to \texttt{exam.pdf} use the tag module of ExamScanUIUC:
+\begin{lstlisting}
+	> python -m examscanuiuc.tag exam.pdf
+\end{lstlisting}
+
+You will be asked for some basic information, namely the number of exams:
+\begin{lstlisting}
+	> Number of exams needed: 10
+\end{lstlisting}
+
+and the page scores:
+\begin{lstlisting}
+	> Enter points available per page as a comma separated list (or blank to cancel).
+	> Expecting 9 page scores.
+	> Unless you want to award points for completing the cover sheet, this should start with a 0: 0,5,6,7,5,5,4,7,6
+\end{lstlisting}
+
+ExamScanUIUC will now generate \texttt{output.pdf} containing 10 tagged copies of the exam.
+
+Of course, you can pass this information in directly via flags:
+\begin{lstlisting}
+	> python -m examscanuiuc.tag exam.pdf --num=10 --scores=0,5,6,7,5,5,4,7,6
+\end{lstlisting}
+
+If you want to generate more exams or the exam in several pieces, use the --start flag to set a starting exam number:
+\begin{lstlisting}
+	> python -m examscanuiuc.tag exam.pdf --num=5 --start=11 --scores=0,5,6,7,5,5,4,7,6
+\end{lstlisting}
+
+Alternatively, this information can be specified by a configuration file:
+\begin{lstlisting}
+	> python -m examscanuiuc.tag exam.pdf --config=settings.conf
+\end{lstlisting}
+
+\subsection{Advanced tagging}
+
+This also allows more advanced tagging of the exams by providing a rooms spreadsheet.
+\begin{lstlisting}
+	> python -m examscanuiuc.tag exam.pdf --config=settings.conf --rooms=rooms.xlsx
+\end{lstlisting}
+This Excel file contains sheets describing the room layouts and ExamScanUIUC can use these to also add seat names to each exam.
+
+\subsection{Analysis}
+
+To analyse the scanned pages of a tagged exam contained in \texttt{scans.pdf} use the scan module of ExamScanUIUC:
+\begin{lstlisting}
+	> python -m examscanuiuc.scan --roster=demo/roster.xlsx demo/scan.pdf
+\end{lstlisting}
+
+Pages can be scanned in several batches.
+Once all pages have been scanned, ExamScanUIUC will write all student data out to \texttt{results.csv}.
+
+Additionally, reports for students can be generated by providing a template:
+\begin{lstlisting}
+	> python -m examscanuiuc.scam --roster=demo/roster.xlsx --template=demo/template.html
+\end{lstlisting}
+
+This html template will have its tags, denoted \texttt{\{\{tag\_name\}\}}, replaced with data for each student.
+
+Temporary data is stored in ./tmp and this should be deleted before starting analysing a new exam.
+
+\section{Known issues}
+
+The packages used by ExamScanUIUC require an updated version of the \href{https://pypi.org/project/six/}{\texttt{six}} package.
+Since this is included as an `Extra' package in the included system Python on OS X, Mac users may need to:
+\begin{itemize}
+\item install Python manually,
+\item modify their \texttt{PYTHONPATH} environment variable, or
+\item install ExamScanUIUC within \texttt{virtualenv}
+\end{itemize}
+as described \href{http://stackoverflow.com/questions/29485741/unable-to-upgrade-python-six-package-in-mac-osx-10-10-2}{here}.
+
+\end{document}

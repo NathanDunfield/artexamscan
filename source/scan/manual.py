@@ -1,8 +1,6 @@
 
 import os, sys, json, subprocess
-
-from examscanuiuc.scan import Roster, PDFPages, image_from_pdf, read_page_id, read_uin, read_tickbox
-from examscanuiuc.scan import ScoreReadError, CouldNotGetQRCode
+import examscanuiuc
 
 def default_open(file_path):
 	if sys.platform.startswith('darwin'):
@@ -16,10 +14,10 @@ def manual_process_page(page_path, roster):
 	print('Processing %s' % os.path.basename(page_path))
 	default_open(page_path)
 	
-	image = image_from_pdf(page_path)
+	image = examscanuiuc.scan.image_from_pdf(page_path)
 	try:
-		exam_num, exam_pagenum, page_max = [int(p) for p in read_page_id(image).split(b',')]  # !?!
-	except CouldNotGetQRCode:
+		exam_num, exam_pagenum, page_max = [int(p) for p in examscanuiuc.scan.read_page_id(image).split(b',')]  # !?!
+	except examscanuiuc.scan.CouldNotGetQRCode:
 		print('Could not read QR code.')
 		exam_num = raw_input('Enter exam number: ')
 		if exam_num == '': return False
@@ -31,8 +29,8 @@ def manual_process_page(page_path, roster):
 	
 	if page == 1:
 		try:
-			uin = read_uin(image)
-		except ScoreReadError:
+			uin = examscanuiuc.scan.read_uin(image)
+		except examscanuiuc.scan.ScoreReadError:
 			uin = raw_input('Enter correct UIN: ')
 			if uin == '': return False
 		
@@ -48,9 +46,9 @@ def manual_process_page(page_path, roster):
 			uins.write(json.dumps(parsed) + '\n')
 	else:
 		try:
-			score, quality = read_tickbox(image)
+			score, quality = examscanuiuc.scan.read_tickbox(image)
 			if score > page_max: raise ValueError('Tried to award %d on %d point question.' % (score, page_max))
-		except ScoreReadError:
+		except examscanuiuc.scan.ScoreReadError:
 			score = raw_input('Enter correct score: ')
 			if score == '': return False
 			score, quality = int(score), 10

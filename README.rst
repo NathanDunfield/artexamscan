@@ -12,6 +12,16 @@ The preferred method for installing the latest stable release is to use `pip <ht
 
 ExamScan requires pdfimages, pdftoppm and zbar.
 
+.. warning::
+	The packages used by ExamScanUIUC require an updated version of the `six <https://pypi.org/project/six/>_` package.
+	Since this is included as an Extra package in the included system Python on OS X, Mac users may need to:
+	
+	- install Python manually,
+	- modify their \texttt{PYTHONPATH} environment variable, or
+	- install ExamScanUIUC within \texttt{virtualenv}
+	
+	as described `here <http://stackoverflow.com/questions/29485741/unable-to-upgrade-python-six-package-in-mac-osx-10-10-2>_`.
+
 Usage
 =====
 

@@ -147,7 +147,7 @@ if __name__ == '__main__':
 	if manual_pages:
 		ans = raw_input('Enter "Yes" to correct now: ')
 		if ans == 'Yes':
-			for page_path in manual_pages
+			for page_path in manual_pages:
 				if not save_manual(page_path, roster): break
 	
 	results = collate('tmp/uins', 'tmp/scores')

@@ -36,5 +36,5 @@ def read_page_id(image):
 	data = {qr.data for qr in codes}
 	if len(data) > 1:
 		raise CouldNotGetQRCode('Different codes found')
-	return codes[0].data.replace(b'(', b'').repalce(b')', b'')
+	return codes[0].data.replace(b'(', b'').replace(b')', b'')
 

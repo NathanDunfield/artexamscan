@@ -10,7 +10,7 @@ The preferred method for installing the latest stable release is to use `pip <ht
 
 	> python -m pip install examscanuiuc --user --upgrade
 
-ExamScan requires pdfimages, pdftoppm and zbar.
+ExamScanUIUC requires pdfimages, pdftoppm and zbar.
 
 .. warning::
 	The packages used by ExamScanUIUC require an updated version of the `six <https://pypi.org/project/six/>`_ package.
@@ -33,7 +33,7 @@ Later, scans of completed exams can be analysed by using::
 
 	> python -m examscanuiuc.scan scan.pdf
 
-For full examples of usage, see the ExamScan documentation, which can be open by using::
+For full examples of usage, see the ExamScanUIUC documentation, which can be open by using::
 
 	> python -m examscanuiuc.doc
 

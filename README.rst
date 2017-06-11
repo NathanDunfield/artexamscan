@@ -1,6 +1,6 @@
 
 ExamScanUIUC is a python package for adding and analysing tags on exams.
-It can be run as a Python 2 or Python 3 module and has been tested on:
+It can be run as a Python 2 or Python 3 module.
 
 Installation
 ============

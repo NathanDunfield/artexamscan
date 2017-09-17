@@ -9,7 +9,6 @@
 .aux
 .log
 .out
-.pdf
 .csv
 
 ^build/

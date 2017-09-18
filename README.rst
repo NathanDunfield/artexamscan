@@ -1,5 +1,6 @@
 
 ExamScanUIUC is a python package for adding and analysing tags on exams.
+It was written by Mark C. Bell and is a complete rewrite of Nathan Dunfield's unpublished "examautomat" program, which uses the same basic strategy for processing hand-graded exams in bulk.
 It can be run as a Python 2 or Python 3 module.
 
 Installation

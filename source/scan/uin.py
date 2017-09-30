@@ -4,8 +4,8 @@ Assumes a 400dpi images.
 '''
 
 import numpy as np
-from examscan.scan import image_utils
-from examscan.scan.errors import ScoreReadError
+from examscanuiuc.scan import image_utils
+from examscanuiuc.scan.errors import ScoreReadError
 
 NUM_DIGITS = 9
 CHARS = '0123456789'

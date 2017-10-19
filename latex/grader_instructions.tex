@@ -1,0 +1,137 @@
+\documentclass[12pt]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{fourier}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage[nolinks]{qrcode}
+
+\newcommand{\smallgraderbox}[2]{
+  \begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
+    \begin{scope}[line width=1.5pt]
+      \draw (0, 2.3) -- +(21.59, 0);
+      \draw (2.3, 0) -- +(0, 2.3);
+      \draw (4.5, 0) -- +(0, 2.3);
+      \draw (19.0, 0) -- +(0, 2.3);
+      \draw (4.5, 0.7) -- (19, 0.7);
+      \node at (3.4, 0.7) {Page score};
+    \end{scope}
+
+    \node at (1.5, 1.5) {\qrcode[height=1cm]{#1}};
+    \node at (20, 1.5) {\qrcode[height=1cm]{#1}};
+
+    \foreach \x in {0,1,...,#2}{
+      \coordinate (p) at (5.25 + 1.3*\x, 1.5);
+      \node[draw, minimum size=0.4cm] at (p) {\x};
+      \node[draw, minimum size=0.8cm, line width=0.5pt, style=dashed] at (p) {};
+    };
+  \end{tikzpicture}
+}
+
+\pagestyle{empty}
+\begin{document}
+\section{Automated score recording}
+
+While we will continue our tradition of artisanally hand-grading
+exams, we will completely automate the score entry process and return
+exams electronically.  Here's how it will work.
+
+\begin{enumerate}
+\item Immediately after proctoring the exam, we will first sort the
+  exams into piles by TA.  For each pile, we will remove the
+  staples and sort into stacks consisting of a single page number.
+  There will be a preprinted coversheet for each stack (``Sections ADB
+  and ADC, Page 3") and each stack will be secured with a
+  medium-sized binder clip.
+
+  Note: The sorting by TA is largely just so we end up with piles of
+  roughly equal sizes and is not required by the program.  The
+  separating by page \textbf{speeds up grading immensely} but is not
+  necessary either.
+
+\item When grading, take the binder clip off one stack, grade all
+  the pages, reattach the binder clip, and finally put the stack in
+  the ``to be scanned'' box.  Note: You do \textbf{not} need to
+  preserve the order of the pages in each stack.  Feel free to shuffle
+  them!  The program does not care at all which order things are
+  scanned in.
+
+\item All grading should be done with a dark (e.g. blue, purple, or black) 
+  felt-tipped marker.  The exams will be scanned and returned to the
+  students in black and white.  
+
+\item Each page will have the following at the bottom:
+
+  \smallgraderbox{nmd123,0,8}{8}
+
+
+\begin{enumerate}
+  \item Write the total for the page in the ``page score'' box at left.  
+  \item 
+    \begin{minipage}[t]{10cm}
+    Indicate the ``page score'' by making a cross in the
+    \emph{smaller} box like this: 
+    \end{minipage} \quad
+    \begin{tikzpicture}[
+      scale=0.5, 
+      every node/.style={transform shape}, 
+      line cap=round, 
+      baseline=8]
+      \node[draw, minimum size=1cm] at (0, 0) {};
+      \node[draw, minimum size=2cm, line width=0.5pt, style=dashed] at (0, 0) {};
+      \draw[line width=4pt] (-0.4, -0.4) .. controls (-0.06, 0.05) .. (0.4, 0.4);
+      \draw[line width=4pt] (-0.4, 0.4) .. controls (0.06, 0.07) .. (0.47, -0.4);
+    \end{tikzpicture}
+    
+
+  \item 
+    \begin{minipage}[t]{10cm}
+      If you need to change the grade, leave your initial mark as is,
+      and fill the \emph{smaller} box for the correct grade like this:
+    \end{minipage} \quad
+    \begin{tikzpicture}[
+      scale=0.5, 
+      every node/.style={transform shape}, 
+      line cap=round, 
+      baseline=12]
+      \node[draw, fill, minimum size=1cm] at (0, 0) {};
+      \node[draw, minimum size=2cm, line width=0.5pt, style=dashed] at (0, 0) {};
+    \end{tikzpicture}
+    
+  \item
+    \begin{minipage}[t]{10cm}
+       If you need to change the grade a \emph{second} time, fill in the
+       \emph{large} box of the now desired grade like this:
+    \end{minipage} \quad
+    \begin{tikzpicture}[
+      scale=0.5, 
+      every node/.style={transform shape}, 
+      line cap=round, 
+      baseline=12]
+      \node[draw, minimum size=1cm] at (0, 0) {};
+      \node[draw, fill, minimum size=2cm, line width=0.5pt, style=dashed] at (0, 0) {};
+    \end{tikzpicture}
+
+  \item If you need to change the grade a third time, give up and
+    hand the page over to Nathan for hand-entry of the score. 
+
+\end{enumerate}
+
+\end{enumerate}
+
+
+\section{Supplies}
+
+\begin{itemize}
+
+\item Various tools for removing staples, including scissors.  For the
+  midterms which were 6-7 pages, all methods for removing staples
+  worked fine.  For the 12 page final, only cutting off the corners
+  with scissors was effective.
+
+\item 200 medium-sized binder clips.
+
+\item 30 dark felt-tipped markers.
+
+\end{itemize}
+
+\end{document}

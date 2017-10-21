@@ -143,6 +143,13 @@ This Excel file contains sheets describing the room layouts and ExamScanUIUC can
 
 \subsection{Analysis}
 
+Exams should be scanned in black and white at 400dpi \textbf{with the
+  pages rotated 180 degress} so while you can read each page they are
+upside down from your perspective. This is because the corners where
+the staples were are often slightly damaged, and the pages twist more
+if scanned in the standard orientation, confusing the optical mark
+recoginition code. \textbf{If you don't physically rotate the pages, the code will fail.}
+
 To analyse the scanned pages of a tagged exam contained in \texttt{scans.pdf} use the scan module of ExamScanUIUC:
 \begin{lstlisting}
 	> python -m examscanuiuc.scan --roster=demo/roster.xlsx demo/scan.pdf

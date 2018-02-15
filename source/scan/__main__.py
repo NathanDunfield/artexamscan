@@ -38,14 +38,18 @@ def load_data(directory):
 def process_page(file_name, page_num, page_path, roster):
 	image = image_from_pdf(page_path)
 	try:
-		exam_num, exam_pagenum, page_max = [int(p) for p in read_page_id(image).split(b',')]
+		parts = read_page_id(image).split(b',')
+		if len(parts) == 7:
+			term, CRN, exam_name, exam_version, exam_num, exam_pagenum, page_max = read_page_id(image).split(b',')
+			parts = [exam_num, exam_pagenum, page_max]
+		exam_num, exam_pagenum, page_max = [int(p) for p in parts]
 		message = ''
 		if exam_pagenum == 1:
 			state = UIN
 			uin = read_uin(image)
 			matched = roster.match(uin)
 			if matched['UIN'] != uin:
-				message = 'Warning on page %d: UIN fudged %d -> %d' % (page_num, uin, matched['UIN'])
+				message = 'Warning on page %s: UIN fudged %s -> %s' % (page_num, uin, matched['UIN'])
 			matched['exam'] = exam_num
 			parsed = dict(matched)
 		else:

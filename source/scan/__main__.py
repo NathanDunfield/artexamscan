@@ -115,9 +115,12 @@ def process_file(file_path, roster, reprocess=False, perfect=False):
 
 def collate(uins_path, scores_path):
 	df = load_data(uins_path)
+	needed_cols = ['exam', 'UIN', 'name', 'netid']
+	if df.empty:
+		df = pd.DataFrame(columns=needed_cols)
 	df = df.drop_duplicates(['netid'])
 	df = df.drop_duplicates(['exam'])
-	df = df[['exam', 'UIN', 'name', 'netid']]
+	df = df[needed_cols]
 
 	ds = load_data(scores_path)
 	if not ds.empty:
@@ -149,7 +152,7 @@ if __name__ == '__main__':
 		process_file(file_path, roster, reprocess=args.reprocess, perfect=args.perfect)
 
 	manual_pages = sorted(glob.glob('tmp/errors/*.pdf'))
-	print('%d page(s) require manual entry.')
+	print('%d page(s) require manual entry.' % len(manual_pages))
 	if manual_pages:
 		ans = input('Enter "Yes" to correct now: ')
 		if ans == 'Yes':

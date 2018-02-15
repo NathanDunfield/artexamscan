@@ -46,6 +46,7 @@ setup(
 		'PyPDF2',
 		'openpyxl',
 		# scan requirements.
+		'six',
 		'numpy',
 		'scipy',
 		'scikit-image',
@@ -57,4 +58,3 @@ setup(
 		'matplotlib',
 		]
 	)
-

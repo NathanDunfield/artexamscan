@@ -28,7 +28,7 @@ def image_from_pdf(file_path, rotate=True):
 
 def smooth_image(image, sigma=2):
 	''' Return smoothed image without changing the overall resolution. '''
-	
+
 	if sigma == 0:
 		return image.copy()
 	with warnings.catch_warnings():
@@ -58,34 +58,34 @@ def make_longest_almost_horizontal_exact(image, dtheta=0.17, samples=100):
 
 def black_density(image):
 	# The convention here is that 0 is white and 1 is black.
-	
+
 	return float(image.sum()) / image.size
 
 def extract_box(image, sides='NESW', align='horizontal', percent=0.30):
 	''' Slice sides off of the given image. '''
-	
+
 	sides = set(sides)
 	image = skimage.img_as_float(image)
 	# Convention is 1 is black
 	if black_density(image) > 0.5: image = 1 - image
-	
+
 	# Rotate a little so horizontal and vertical lines are exactly such.
 	if align == 'horizontal':
 		image = make_longest_almost_horizontal_exact(image)
 	else:  # align == 'vertical'.
 		image = make_longest_almost_vertical_exact(image)
-	
+
 	smoothed = skimage.morphology.erosion(image)  # This seems even better than smoothing.
 	height, width = smoothed.shape
 	# Cut off a given percentage from the top, bottom, left and right
 	# to analyse.
 	l, r = smoothed[ : , :int(percent*width)], smoothed[ : , int(-percent*width): ]
 	t, b = smoothed[ :int(percent*height), : ], smoothed[int(-percent*height): , :]
-	
+
 	n, s, w, e = 0, image.shape[0], 0, image.shape[1]
 	horizontal_angles = np.linspace(1.55, 1.59, 30)  # ~pi/2 so ~horizontal.
 	vertical_angles = np.linspace(-0.02, 0.02, 30)  # ~0 so ~vertical.
-	
+
 	if 'N' in sides:
 		data = skimage.transform.hough_line(t, horizontal_angles)
 		_, _, dists = skimage.transform.hough_line_peaks(*data, num_peaks=2)
@@ -102,7 +102,7 @@ def extract_box(image, sides='NESW', align='horizontal', percent=0.30):
 		data = skimage.transform.hough_line(r, vertical_angles)
 		_, _, dists = skimage.transform.hough_line_peaks(*data, num_peaks=2)
 		e = image.shape[1] + int(max(dists)) - r.shape[1]
-	
+
 	#from PIL import Image, ImageDraw
 	#im = Image.fromarray(np.uint8(image * 255))
 	#draw = ImageDraw.Draw(im)
@@ -112,6 +112,5 @@ def extract_box(image, sides='NESW', align='horizontal', percent=0.30):
 	#draw.line((e, 0, e, im.size[1]), width=10, fill='Red')
 	#im.save('x.png')
 	#Image.fromarray(np.uint8(t * 255)).save('t.png')
-	
-	return image[n:s, w:e]
 
+	return image[n:s, w:e]

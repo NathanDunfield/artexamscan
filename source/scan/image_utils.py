@@ -61,7 +61,7 @@ def black_density(image):
 
 	return float(image.sum()) / image.size
 
-def extract_box(image, sides='NESW', align='horizontal', percent=0.30):
+def extract_box(image, sides='NESW', align='horizontal', percent=0.35):
 	''' Slice sides off of the given image. '''
 
 	sides = set(sides)

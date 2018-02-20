@@ -3,9 +3,9 @@ Tagging exams via LaTeX
 
 This directory describes an alternate way of adding the QR tags and
 grader boxes to an exam. Instead of using Python combined with several
-add-on packages, it requires only a reasonably recent TeX setup. The
-disadvantage is that is considerably slower which is a real concern
-when generating more than 1000 pages of exams.
+add-on packages, it requires only a reasonably recent TeX
+setup. Provided you use LuaLaTeX, you can tag 1000 pages/minute using
+this method.
 
 An example
 ==========
@@ -34,9 +34,9 @@ copies of each, numbered 1-10 and 11-20 respectively.
 LuaLaTeX
 ========
 
-For a 50% reduction in running time, one can use LuaLaTeX to compute
-the QR codes.  Just make sure the file "qrencode.lua" is in the same
-directory as "tickyoverlay.cls" and do
+For a 4 times speedup, one can use LuaLaTeX instead of PDFLaTeX. Just
+make sure the file "qrencode.lua" is in the same directory as
+"tickyoverlay.cls" and then do::
 
   lualatex m1-9am-tagged.tex
   lualatex m1-10am-tagged.tex
@@ -48,12 +48,9 @@ Timings
 Time needed to generate 100 copies of a 7 page exam (including
 coversheet) on Nathan's 2014 MacPro:
 
-1. PDFLaTeX: 3m38s
+1. PDFLaTeX: 2 minutes 43 seconds
 
-2. LuaLaTeX: 1m49s
+2. LuaLaTeX: 38 seconds
 
-Either way results in a 2.7M file.  If one removes the QR codes,
-PDFLaTeX can assemble the copies into a 1.6M file in 1m05s with the
-rest of the TikZ overlay. A straight-up use of PDFLaTeX's "pdfpages"
-package creates a 0.2M files in just 9 seconds. 
+Either way results in a 3.0M file. 
 

@@ -73,8 +73,6 @@
   \newcommand{\nmd@qrcode}[1]{\qrcode[height=1cm]{#1}}
 \fi
 
- \renewcommand{\nmd@qrcode}[1]{\relax}
-
 % The main grader answer area is 14.5 x 1.6 cm, with an aspect ratio
 % 9.025
 
@@ -86,9 +84,10 @@
 }
 
 
+\newsavebox{\nmd@UINentrybox}
 % Draw UIN entry area
-\newcommand{\drawUINentrybox}{%
-  \begin{scope}[scale=1.0011, shift={(11.79cm, 22.23cm)}]
+\sbox{\nmd@UINentrybox}{%
+  \begin{tikzpicture}
     \newcommand{\s}{0.8}
     \draw[line width=1pt] (0, 2.0*\s) rectangle (10*\s, -10.5*\s);
     \node[below right=3pt] at (0, 2.0*\s) {\bf  Write and bubble in your UIN:};
@@ -103,8 +102,23 @@
         \node[draw, circle] at (\s + \s*\u, -0.5*\s - \s*\d) {\scriptsize \d};
       }
     }
-  \end{scope}
+  \end{tikzpicture}
 }
+
+\newsavebox{\nmd@ticksavebox}
+
+\sbox{\nmd@ticksavebox}{%
+  \begin{tikzpicture}[xscale=0.9984]
+    \foreach \x in {0,1,...,10}{
+      \coordinate (p) at (1.3*\x, 0);
+      \node[draw, minimum size=0.4cm] at (p) {\x};
+      \node[draw, minimum size=0.8cm, line width=0.5pt, style=dashed] at (p) {};
+    };
+  \end{tikzpicture}
+}
+
+
+\newsavebox{\nmd@qrsavedbox}
 
 \newcommand{\graderboxguts}[2]{
   \fill[color=white] (0, 0) rectangle (21.59, 2.3);
@@ -117,19 +131,23 @@
     \node at (3.4, 0.7) {Page score};
   \end{scope}
 
-  \node at (1.5, 1.5) {\nmd@qrcode{#1}};
-  \node at (20, 1.5) {\nmd@qrcode{#1}};
+  \sbox{\nmd@qrsavedbox}{\nmd@qrcode{#1}}
+  \node at (1.5, 1.5) {\usebox{\nmd@qrsavedbox}};
+  \node at (20, 1.5) {\usebox{\nmd@qrsavedbox}};
 
   \ifnotthen{\equal{#2}{0}}{
-    \foreach \x in {0,1,...,#2}{
-      \coordinate (p) at (5.25 + 1.3*\x, 1.5);
-      \node[draw, minimum size=0.4cm] at (p) {\x};
-      \node[draw, minimum size=0.8cm, line width=0.5pt, style=dashed] at (p) {};
-    };
+    %\foreach \x in {0,1,...,#2}{
+    %  \coordinate (p) at (5.25 + 1.3*\x, 1.5);
+    %  \node[draw, minimum size=0.4cm, red] at (p) {\x};
+    %  \node[draw, minimum size=0.8cm, red, line width=0.5pt, style=dashed] at (p) {};
+    %};
+    \node[inner sep=0pt, outer sep=0pt, anchor=west] at (4.85, 1.5) {\usebox{\nmd@ticksavebox}};
+    %\fill[green, opacity=0.1]  (4.7, 1.0) rectangle (18.85, 2.0);
+    \fill[white] (5.9 + 1.3*#2, 1) rectangle (18.85, 2);
   }
 
   \ifthen{\equal{#2}{0}}{
-    \drawUINentrybox
+    \node[inner sep=0pt, anchor=north west] at (11.775cm, 23.885cm) {\usebox{\nmd@UINentrybox}};
   }
 }
 

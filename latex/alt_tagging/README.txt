@@ -31,4 +31,12 @@ copies of each, numbered 1-10 and 11-20 respectively.
    which will generate two 70 page PDF files, one for each version.
 
      
+LuaLaTeX
+========
 
+For a 50% reduction in running time, one can use LuaLaTeX to compute
+the QR codes.  Just change the document class to "tickyoverlaylua.cls"
+and do::
+
+  lualatex m1-9am-tagged.tex
+  lualatex m1-10am-tagged.tex

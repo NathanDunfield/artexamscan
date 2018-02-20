@@ -1,0 +1,19 @@
+\documentclass{tickyoverlay}
+\begin{document}
+
+\examdefaults{
+  examfile=m1-10am.pdf,
+  coverfile=cover.pdf,
+  pagemaxes={0,8,6,8,6,7,7},
+  term=181,   % = banner term 120081
+  CRN=57719,  % 10am
+  name=m1,
+  version=2,
+}
+
+\foreach \i in {11,...,20}{
+  \overlayexam{}{\i}
+}
+
+
+\end{document}

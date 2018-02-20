@@ -11,12 +11,69 @@
 % Load packages for drawing the gradebox overlays.
 \RequirePackage{tikz}
 \usetikzlibrary{calc}
-\RequirePackage[nolinks]{qrcode}
 \RequirePackage{keyval}
 \RequirePackage{ifthen}
 \newcommand{\ifnotthen}[2]{\ifthenelse{#1}{\relax}{#2}}
 \newcommand{\ifthen}[2]{\ifthenelse{#1}{#2}{\relax}}
 
+% Setup QR code generator.  If in LuaTeX, use it to compute the QR
+% codes for a 2x speedup.
+
+\RequirePackage{ifluatex}
+
+\ifluatex
+  \RequirePackage{luacode}
+  \begin{luacode}
+    qrcodelib = dofile("qrencode.lua")
+
+    local function black_box(size)
+      return "\\rule{"..size.."}{"..size.."}"
+    end
+
+    local function white_box(size)
+      return "\\rule{"..size.."}{0pt}"
+    end
+
+    function qrcode(s)
+      -- Generate a 1cm x 1cm qrcode
+      local ok, tab_or_message = qrcodelib.qrcode(s)
+      local buffer = {}
+      local write_nl = function(text)
+	table.insert(buffer,text)
+      end
+      if not ok then
+	print(tab_or_message)
+      else
+	local x = #tab_or_message[1]
+	local y = #tab_or_message
+	local w = (1/x .. "cm")
+	write_nl("\\begin{minipage}{1cm}")
+	write_nl("\\baselineskip="..w)
+	for i = 1, x, 1 do
+	  local boxes = {}
+	  for n = 1, y, 1 do
+	    local p = tab_or_message[n][i] > 0  and black_box(w) or white_box(w)
+	    table.insert(boxes,p)
+	  end
+	  write_nl(table.concat(boxes).."\\par")
+	end
+	write_nl("\\end{minipage}")
+      end
+      return table.concat(buffer,"")
+    end
+  \end{luacode}
+
+  \newcommand\nmd@qrcode[1]{%
+    \directlua{%
+      tex.print(qrcode("\luatexluaescapestring{#1}"))
+    }
+  }
+\else % In plain PDFLaTeX
+  \RequirePackage[nolinks]{qrcode}
+  \newcommand{\nmd@qrcode}[1]{\qrcode[height=1cm]{#1}}
+\fi
+
+ \renewcommand{\nmd@qrcode}[1]{\relax}
 
 % The main grader answer area is 14.5 x 1.6 cm, with an aspect ratio
 % 9.025
@@ -60,8 +117,8 @@
     \node at (3.4, 0.7) {Page score};
   \end{scope}
 
-  \node at (1.5, 1.5) {\qrcode[height=1cm]{#1}};
-  \node at (20, 1.5) {\qrcode[height=1cm]{#1}};
+  \node at (1.5, 1.5) {\nmd@qrcode{#1}};
+  \node at (20, 1.5) {\nmd@qrcode{#1}};
 
   \ifnotthen{\equal{#2}{0}}{
     \foreach \x in {0,1,...,#2}{

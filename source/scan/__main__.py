@@ -38,10 +38,12 @@ def load_data(directory):
 def process_page(file_name, page_num, page_path, roster):
 	image = image_from_pdf(page_path)
 	try:
-		parts = read_page_id(image).split(b',')
+		parts = read_page_id(image).split(',')
+		extras = dict()
 		if len(parts) == 7:
-			term, CRN, exam_name, exam_version, exam_num, exam_pagenum, page_max = read_page_id(image).split(b',')
+			term, CRN, exam_name, exam_version, exam_num, exam_pagenum, page_max = read_page_id(image).split(',')
 			parts = [exam_num, exam_pagenum, page_max]
+			extras = {'term':term, 'CRN':int(CRN), 'exam_name':exam_name, 'exam_version':exam_version}
 		exam_num, exam_pagenum, page_max = [int(p) for p in parts]
 		message = ''
 		if exam_pagenum == 1:
@@ -52,6 +54,7 @@ def process_page(file_name, page_num, page_path, roster):
 				message = 'Warning on page %s: UIN fudged %s -> %s' % (page_num, uin, matched['UIN'])
 			matched['exam'] = exam_num
 			parsed = dict(matched)
+			parsed.update(extras)
 		else:
 			state = SCORE
 			score, quality = read_tickbox(image)
@@ -120,8 +123,7 @@ def collate(uins_path, scores_path):
 		df = pd.DataFrame(columns=needed_cols)
 	df = df.drop_duplicates(['netid'])
 	df = df.drop_duplicates(['exam'])
-	df = df[needed_cols]
-
+	
 	ds = load_data(scores_path)
 	if not ds.empty:
 		ds = ds[['exam', 'page', 'score']]

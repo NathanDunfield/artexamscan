@@ -28,7 +28,7 @@ def manual_process_page(page_path, roster):
 		if max_score == '': return False
 		exam_num, page_num, max_score = int(exam_num), int(page_num), int(max_score)
 
-	if page == 1:
+	if page_num == 1:
 		try:
 			uin = examscanuiuc.scan.read_uin(image)
 		except examscanuiuc.scan.ScoreReadError:
@@ -61,6 +61,6 @@ def manual_process_page(page_path, roster):
 
 	this_exam_dir = os.path.join('tmp', 'exams', str(exam_num))
 	if not os.path.exists(this_exam_dir): os.makedirs(this_exam_dir)
-	subprocess.call(['cp', file_path, os.path.join(this_exam_dir, str(page_num) + '.pdf')])
-	subprocess.call(['mv', file_path, os.path.join('tmp', 'manual')])
+	subprocess.call(['cp', page_path, os.path.join(this_exam_dir, str(page_num) + '.pdf')])
+	subprocess.call(['mv', page_path, os.path.join('tmp', 'manual')])
 	return True

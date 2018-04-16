@@ -13,7 +13,7 @@ except ImportError:  # Python 3.
 
 from examscanuiuc.scan import Roster, PDFPages, image_from_pdf, read_page_id, read_uin, read_tickbox
 from examscanuiuc.scan import ScoreReadError, CouldNotGetQRCode
-
+from .manual import manual_process_page
 import examscanuiuc.scan.report
 
 ERROR, UIN, SCORE = 'Error', 'UIN', 'Score'
@@ -44,6 +44,10 @@ def process_page(file_name, page_num, page_path, roster):
 			term, CRN, exam_name, exam_version, exam_num, exam_pagenum, page_max = read_page_id(image).split(',')
 			parts = [exam_num, exam_pagenum, page_max]
 			extras = {'term':term, 'CRN':int(CRN), 'exam_name':exam_name, 'exam_version':exam_version}
+		if len(parts) == 9:
+			term, course, CRN, instr_netid, exam_name, exam_version, exam_num, exam_pagenum, page_max = read_page_id(image).split(',')
+			parts = [exam_num, exam_pagenum, page_max]
+			extras = {'term':term, 'course':int(course), 'CRN':int(CRN), 'exam_name':exam_name, 'exam_version':exam_version}
 		exam_num, exam_pagenum, page_max = [int(p) for p in parts]
 		message = ''
 		if exam_pagenum == 1:
@@ -123,7 +127,7 @@ def collate(uins_path, scores_path):
 		df = pd.DataFrame(columns=needed_cols)
 	df = df.drop_duplicates(['netid'])
 	df = df.drop_duplicates(['exam'])
-	
+
 	ds = load_data(scores_path)
 	if not ds.empty:
 		ds = ds[['exam', 'page', 'score']]
@@ -157,9 +161,9 @@ if __name__ == '__main__':
 	print('%d page(s) require manual entry.' % len(manual_pages))
 	if manual_pages:
 		ans = input('Enter "Yes" to correct now: ')
-		if ans == 'Yes':
+		if ans.lower()[0] == 'y':
 			for page_path in manual_pages:
-				if not save_manual(page_path, roster): break
+				if not manual_process_page(page_path, roster): break
 
 	results = collate('tmp/uins', 'tmp/scores')
 	unmatched = roster.roster[-roster.roster.UIN.isin(results.UIN)]  # The students we don't have anything for.

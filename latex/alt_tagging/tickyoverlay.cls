@@ -70,6 +70,8 @@
       else
         local n = #QR
         assert(n == #QR[1], "QR code not square")
+        texio.write_nl('<QR encoded "'..s..'" at version '..((n - 17)/4)..'>')
+
         write("\\pdfinlineimage{"..8*n.."}{")
         for i = 1, n, 1 do
           for k = 1, 8, 1 do

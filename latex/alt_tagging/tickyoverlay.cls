@@ -16,7 +16,7 @@
 \newcommand{\ifnotthen}[2]{\ifthenelse{#1}{\relax}{#2}}
 \newcommand{\ifthen}[2]{\ifthenelse{#1}{#2}{\relax}}
 
-% Need for compatibility with LuaTeX 0.95 and newer
+% Need for compatibility with LuaTeX 0.95 and newer.
 \ifthen{\isundefined{\pdfliteral}}{%
     \protected\def\pdfliteral{\pdfextension literal}}
 
@@ -33,6 +33,7 @@
   /H #1
   /CS /G
   /BPC 1
+  /I false
   /F [ /AHx ]
   ID
   #2>
@@ -43,7 +44,10 @@
 }
 
 % Setup QR code generator.  If in LuaTeX, use it to compute the QR
-% codes for a massive speedup.
+% codes for a massive speedup.  To work around a buggy PDF renderers
+% from Apple and Xerox that ignore the interpolate = false flag in
+% some bitmapped images, we encode each block of the QR code as a grid
+% of 8 x 8 pixels.
 
 \RequirePackage{ifluatex}
 
@@ -51,54 +55,31 @@
   \RequirePackage{luacode}
   \begin{luacode}
     qrcodelib = dofile("qrencode.lua")
-
-    function zeros(n)
-      local ans = {}
-      for i = 1, n, 1 do
-        table.insert(ans, 0)
-      end
-      return ans
-    end
-
-    function encodebyte(QR, i, j)
-      local total = 0
-      local step
-      local power = 1
-      for k = 7, 0, -1 do
-        step = QR[j+k][i] > 0 and 0 or power
-        total = total + step
-        power = 2*power
-      end
-      return string.format("%02x", total)
-    end
   
     function qrcode(s)
       -- Generate a 1cm x 1cm qrcode
       local ok, QR = qrcodelib.qrcode(s)
       local buffer = {}
-      local write_nl = function(text)
+
+      local write = function(text)
         table.insert(buffer,text)
       end
+
       if not ok then
         print(QR)
       else
         local n = #QR
         assert(n == #QR[1], "QR code not square")
-        -- pad out so length of every row is divisible by 8 as we are
-        -- creating a 1-bit depth image.
-        for i = 1, -n % 8, 1 do
-            table.insert(QR, zeros(n))
-        end
-        write_nl("\\pdfinlineimage{"..n.."}{")
+        write("\\pdfinlineimage{"..8*n.."}{")
         for i = 1, n, 1 do
-          local boxes = {}
-          for j = 1, #QR, 8 do
-            table.insert(boxes, encodebyte(QR, i, j))
-          end
-          table.insert(boxes," ")
-          write_nl(table.concat(boxes))
+          for k = 1, 8, 1 do
+            for j = 1, #QR, 1 do
+              write(QR[j][i] > 0 and "00" or "FF")
+            end
+            write(" ") 
+          end  
         end
-      write_nl("}")
+      write("}")
       end
       return table.concat(buffer,"")
     end

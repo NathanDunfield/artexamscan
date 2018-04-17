@@ -18,13 +18,22 @@ def make_square(image):
 	else:  # w > h.
 		return image[ : ,d:-(w - h - d)]
 
-def read_qr(image):
-	image = make_square(image)  # For some reason zb.Image.scan() only works on sqaure images!
+def read_qr_via_smoothings(image):
+	'''We try various transforms to improve recognitition'''
+	image = make_square(image)  # For some reason zb.Image.scan() only works on square images!
 	for sigma in [0, 1, 2]:
 		smoothed = image_utils.smooth_image(image, sigma)  # Smooth out speckles to make QR codes less jagged.
 		ans = zb.Image.from_np(smoothed.shape, smoothed).scan()
-		if ans: return ans
+		if ans:
+			return ans
 	return []
+
+def read_qr(image):
+	ans = read_qr_via_smoothings(image)
+	if len(ans) == 0:  # One last trick
+		image = image_utils.smooth_image_with_threshold(image, sigma=1)
+		ans = read_qr_via_smoothings(image)
+	return ans
 
 def read_qr_from_lower_corners(image, paper='letter'):
 	return [code for qr in ['qr_left', 'qr_right'] for code in read_qr(image_utils.image_fraction(image, PAPER[paper][qr]))]

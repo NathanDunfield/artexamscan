@@ -4,7 +4,7 @@ Tagging exams via LaTeX
 This directory describes an alternate way of adding the QR tags and
 grader boxes to an exam. Instead of using Python combined with several
 add-on packages, it requires only a reasonably recent TeX
-setup. Provided you use LuaLaTeX, you can tag 1000 pages/minute using
+setup. Provided you use LuaLaTeX, you can tag 1500+ pages/minute using
 this method.
 
 An example
@@ -50,7 +50,7 @@ coversheet) on Nathan's 2014 MacPro:
 
 1. PDFLaTeX: 2 minutes 43 seconds
 
-2. LuaLaTeX: 38 seconds
+2. LuaLaTeX: 28 seconds
 
-Either way results in a 3.0M file. 
+The first way results in a 3M file, the second in a 2.2M one.
 

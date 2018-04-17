@@ -38,6 +38,12 @@ def smooth_image(image, sigma=2):
 		image = skimage.img_as_ubyte(image)
 		return image
 
+def smooth_image_with_threshold(image, sigma=1):
+	''' Return smoothed image with threshold sharpening without changing the overall resolution. '''
+	image = smooth_image(image, sigma)
+	chopped = skimage.filters.threshold_otsu(image) < image
+	return skimage.img_as_ubyte(chopped)
+
 def image_fraction(image, xys):
 	''' Return a subimage where x & y are fractions of the width & height. '''
 	x1, y1, x2, y2 = xys
@@ -114,3 +120,9 @@ def extract_box(image, sides='NESW', align='horizontal', percent=0.4):
 	#Image.fromarray(np.uint8(t * 255)).save('t.png')
 
 	return image[n:s, w:e]
+
+
+def save_image(image, filename):
+	from PIL import Image
+	im = Image.fromarray(image)
+	im.save(filename)

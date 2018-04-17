@@ -16,8 +16,34 @@
 \newcommand{\ifnotthen}[2]{\ifthenelse{#1}{\relax}{#2}}
 \newcommand{\ifthen}[2]{\ifthenelse{#1}{#2}{\relax}}
 
+% Need for compatibility with LuaTeX 0.95 and newer
+\ifthen{\isundefined{\pdfliteral}}{%
+    \protected\def\pdfliteral{\pdfextension literal}}
+
+% Putting bitmaps directly in the PDF file as 1cm boxes.
+% Adapted from https://github.com/zerotoc/pdfinlimg
+
+\newcommand{\pdfinlineimage}[2]{
+\begin{minipage}[c]{1.01cm}
+\makebox[1cm][l]{\immediate\pdfliteral{
+  q
+  28.346456 0 0 28.346456 0 0 cm
+  BI
+  /W #1
+  /H #1
+  /CS /G
+  /BPC 1
+  /F [ /AHx ]
+  ID
+  #2>
+  EI
+  Q
+}\vbox to 1cm{}}
+\end{minipage}
+}
+
 % Setup QR code generator.  If in LuaTeX, use it to compute the QR
-% codes for a 2x speedup.
+% codes for a massive speedup.
 
 \RequirePackage{ifluatex}
 
@@ -26,38 +52,53 @@
   \begin{luacode}
     qrcodelib = dofile("qrencode.lua")
 
-    local function black_box(size)
-      return "\\rule{"..size.."}{"..size.."}"
+    function zeros(n)
+      local ans = {}
+      for i = 1, n, 1 do
+        table.insert(ans, 0)
+      end
+      return ans
     end
 
-    local function white_box(size)
-      return "\\rule{"..size.."}{0pt}"
+    function encodebyte(QR, i, j)
+      local total = 0
+      local step
+      local power = 1
+      for k = 7, 0, -1 do
+        step = QR[j+k][i] > 0 and 0 or power
+        total = total + step
+        power = 2*power
+      end
+      return string.format("%02x", total)
     end
-
+  
     function qrcode(s)
       -- Generate a 1cm x 1cm qrcode
-      local ok, tab_or_message = qrcodelib.qrcode(s)
+      local ok, QR = qrcodelib.qrcode(s)
       local buffer = {}
       local write_nl = function(text)
-	table.insert(buffer,text)
+        table.insert(buffer,text)
       end
       if not ok then
-	print(tab_or_message)
+        print(QR)
       else
-	local x = #tab_or_message[1]
-	local y = #tab_or_message
-	local w = (1/x .. "cm")
-	write_nl("\\begin{minipage}{1cm}")
-	write_nl("\\baselineskip="..w)
-	for i = 1, x, 1 do
-	  local boxes = {}
-	  for n = 1, y, 1 do
-	    local p = tab_or_message[n][i] > 0  and black_box(w) or white_box(w)
-	    table.insert(boxes,p)
-	  end
-	  write_nl(table.concat(boxes).."\\par")
-	end
-	write_nl("\\end{minipage}")
+        local n = #QR
+        assert(n == #QR[1], "QR code not square")
+        -- pad out so length of every row is divisible by 8 as we are
+        -- creating a 1-bit depth image.
+        for i = 1, -n % 8, 1 do
+            table.insert(QR, zeros(n))
+        end
+        write_nl("\\pdfinlineimage{"..n.."}{")
+        for i = 1, n, 1 do
+          local boxes = {}
+          for j = 1, #QR, 8 do
+            table.insert(boxes, encodebyte(QR, i, j))
+          end
+          table.insert(boxes," ")
+          write_nl(table.concat(boxes))
+        end
+      write_nl("}")
       end
       return table.concat(buffer,"")
     end
@@ -150,8 +191,6 @@
     \node[inner sep=0pt, anchor=north west] at (11.775cm, 23.885cm) {\usebox{\nmd@UINentrybox}};
   }
 }
-
-
 
 
 \define@key{examspec}{examfile}{\def\nmd@examfile{#1}}

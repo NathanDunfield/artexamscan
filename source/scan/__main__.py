@@ -80,7 +80,7 @@ def process_page(file_name, page_num, page_path, roster):
 def helper(data):
 	return process_page(*data)
 
-def process_file(file_path, roster, reprocess=False, perfect=False):
+def process_file(file_path, roster, reprocess=False, perfect=False, mapper=None):
 	setup_directories()
 	file_path_hash = md5_hash(file_path)
 	file_name = os.path.basename(file_path)
@@ -96,7 +96,10 @@ def process_file(file_path, roster, reprocess=False, perfect=False):
 	# Now operate on each page
 	todo = [(file_name, index, page_file_path, roster) for index, page_file_path in enumerate(pages, start=1)]
 
-	results = imap(helper, todo)
+	if mapper is None:
+		results = imap(helper, todo)
+	else:
+		results = mapper(helper, todo)
 
 	error_count = 0
 	with open(os.path.join('tmp', 'uins', '%s.json' % file_name), 'w') as uins:
@@ -150,12 +153,20 @@ if __name__ == '__main__':
 	parser.add_argument('--results', type=str, default='results.csv', help='results output file')
 	parser.add_argument('--template', type=str, help='report template to use')
 	parser.add_argument('--reports', type=str, default='reports', help='report output directory')
+	parser.add_argument('--cpus', type=int, default=0, help='number of cpus to use at once')
 	args = parser.parse_args()
 
 	roster = Roster.from_file(args.roster)
 
+	if args.cpus > 0:
+		import multiprocessing
+		pool = multiprocessing.Pool(args.cpus)
+		mapper = pool.map
+	else:
+		mapper = None
+
 	for file_path in args.files:
-		process_file(file_path, roster, reprocess=args.reprocess, perfect=args.perfect)
+		process_file(file_path, roster, reprocess=args.reprocess, perfect=args.perfect, mapper=mapper)
 
 	manual_pages = sorted(glob.glob('tmp/errors/*.pdf'))
 	print('%d page(s) require manual entry.' % len(manual_pages))

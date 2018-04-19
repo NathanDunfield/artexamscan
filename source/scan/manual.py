@@ -17,18 +17,26 @@ def manual_process_page(page_path, roster):
 
 	image = examscanuiuc.scan.image_from_pdf(page_path)
 	try:
-		exam_num, exam_pagenum, page_max = [int(p) for p in examscanuiuc.scan.read_page_id(image).split(b',')]
+		parts = examscanuiuc.scan.read_page_id(image).split(',')
+		extras = dict()
+		if len(parts) == 7:
+			term, CRN, exam_name, exam_version, exam_num, exam_pagenum, page_max = examscanuiuc.scan.read_page_id(image).split(',')
+			parts = [exam_num, exam_pagenum, page_max]
+		if len(parts) == 9:
+			term, course, CRN, instr_netid, exam_name, exam_version, exam_num, exam_pagenum, page_max = examscanuiuc.scan.read_page_id(image).split(',')
+			parts = [exam_num, exam_pagenum, page_max]
+		exam_num, exam_pagenum, page_max = [int(p) for p in parts]
 	except examscanuiuc.scan.CouldNotGetQRCode:
 		print('Could not read QR code.')
 		exam_num = input('Enter exam number: ')
 		if exam_num == '': return False
-		page_num = input('Enter page number: ')
-		if page_num == '': return False
-		max_score = input('Enter max score: ')
-		if max_score == '': return False
-		exam_num, page_num, max_score = int(exam_num), int(page_num), int(max_score)
+		exam_pagenum = input('Enter page number: ')
+		if exam_pagenum == '': return False
+		page_max = input('Enter max score: ')
+		if page_max == '': return False
+		exam_num, exam_pagenum, page_max = int(exam_num), int(exam_pagenum), int(page_max)
 
-	if page_num == 1:
+	if exam_pagenum == 1:
 		try:
 			uin = examscanuiuc.scan.read_uin(image)
 		except examscanuiuc.scan.ScoreReadError:
@@ -54,13 +62,13 @@ def manual_process_page(page_path, roster):
 			if score == '': return False
 			score, quality = int(score), 10
 
-		assert(0 <= score <= max_score)
+		assert(0 <= score <= page_max)
 		parsed = {'exam': exam_num, 'page': exam_pagenum, 'score': score, 'tickcertainty': quality}
 		with open(os.path.join('tmp', 'scores', 'manual.json'), 'a') as scores:
 			scores.write(json.dumps(parsed) + '\n')
 
 	this_exam_dir = os.path.join('tmp', 'exams', str(exam_num))
 	if not os.path.exists(this_exam_dir): os.makedirs(this_exam_dir)
-	subprocess.call(['cp', page_path, os.path.join(this_exam_dir, str(page_num) + '.pdf')])
+	subprocess.call(['cp', page_path, os.path.join(this_exam_dir, str(exam_pagenum) + '.pdf')])
 	subprocess.call(['mv', page_path, os.path.join('tmp', 'manual')])
 	return True

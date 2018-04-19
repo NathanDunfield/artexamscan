@@ -153,12 +153,12 @@ if __name__ == '__main__':
 	parser.add_argument('--results', type=str, default='results.csv', help='results output file')
 	parser.add_argument('--template', type=str, help='report template to use')
 	parser.add_argument('--reports', type=str, default='reports', help='report output directory')
-	parser.add_argument('--cpus', type=int, default=0, help='number of cpus to use at once')
+	parser.add_argument('--cpus', type=int, default=1, help='number of cpus to use at once')
 	args = parser.parse_args()
 
 	roster = Roster.from_file(args.roster)
 
-	if args.cpus > 0:
+	if args.cpus > 1:
 		import multiprocessing
 		pool = multiprocessing.Pool(args.cpus)
 		mapper = pool.map

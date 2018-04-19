@@ -30,9 +30,11 @@ def read_qr_via_smoothings(image):
 
 def read_qr(image):
 	ans = read_qr_via_smoothings(image)
-	if len(ans) == 0:  # One last trick
-		image = image_utils.smooth_image_with_threshold(image, sigma=1)
-		ans = read_qr_via_smoothings(image)
+	if len(ans) != 2:  # One last trick
+		image = image_utils.square_dilation(image, size=2)
+		alt = read_qr_via_smoothings(image)
+		if len(ans) < len(alt):
+			ans = alt
 	return ans
 
 def read_qr_from_lower_corners(image, paper='letter'):

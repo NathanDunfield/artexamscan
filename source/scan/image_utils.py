@@ -44,6 +44,12 @@ def smooth_image_with_threshold(image, sigma=1):
 	chopped = skimage.filters.threshold_otsu(image) < image
 	return skimage.img_as_ubyte(chopped)
 
+def square_dilation(image, size=2):
+	''' Apply morphological dilation to enlarge white regions using a square selem '''
+	selem = skimage.morphology.square(size)
+	image = skimage.morphology.dilation(image, selem)
+	return skimage.img_as_ubyte(image)
+
 def image_fraction(image, xys):
 	''' Return a subimage where x & y are fractions of the width & height. '''
 	x1, y1, x2, y2 = xys

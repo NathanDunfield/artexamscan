@@ -49,7 +49,7 @@ class Roster(object):
 	@classmethod
 	def from_file(self, path):
 		if not os.path.exists(path):
-			raise TypeError('Cannot open %s as it does not exist')
+			raise TypeError('Cannot open %s as it does not exist' % path)
 		for method in [Roster.from_csv, Roster.from_xlsx]:
 			try:
 				return method(path)

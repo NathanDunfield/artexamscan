@@ -16,14 +16,14 @@ from examscanuiuc.scan import ScoreReadError, CouldNotGetQRCode
 from .manual import manual_process_page
 import examscanuiuc.scan.report
 
-ERROR, UIN, SCORE = 'Error', 'UIN', 'Score'
+ERROR, UIN, SCORE, COVER = 'Error', 'UIN', 'Score', 'Cover'
 
 def md5_hash(file_path):
 	with open(file_path, 'rb') as input_file:
 		return hashlib.md5(input_file.read()).hexdigest()
 
 def setup_directories():
-	output_dirs = ['exams', 'finished', 'manual', 'scores', 'errors', 'uins']
+	output_dirs = ['exams', 'finished', 'manual', 'scores', 'errors', 'uins', 'covers']
 
 	for name in output_dirs:
 		full_name = os.path.join('tmp', name)
@@ -39,6 +39,8 @@ def process_page(file_name, page_num, page_path, roster):
 	image = image_from_pdf(page_path)
 	try:
 		parts = read_page_id(image).split(',')
+		if len(parts) == 2: # Coversheet
+			return COVER, {'section':parts[0], 'page':parts[1]}, ''
 		extras = dict()
 		if len(parts) == 7:
 			term, CRN, exam_name, exam_version, exam_num, exam_pagenum, page_max = read_page_id(image).split(',')
@@ -102,17 +104,19 @@ def process_file(file_path, roster, reprocess=False, perfect=False, mapper=None)
 		results = mapper(helper, todo)
 
 	error_count = 0
-	with open(os.path.join('tmp', 'uins', '%s.json' % file_name), 'w') as uins:
-		with open(os.path.join('tmp', 'scores', '%s.json' % file_name), 'w') as scores:
+	coversheet = None
+	with open(os.path.join('tmp', 'uins', '%s.json' % file_path_hash), 'w') as uins:
+		with open(os.path.join('tmp', 'scores', '%s.json' % file_path_hash), 'w') as scores:
 			for state, parsed, message in results:
 				print(state, parsed)
 				if state == ERROR:
 					error_count += 1
-				if state == UIN:
+				elif state == UIN:
 					uins.write(json.dumps(parsed) + '\n')
-				if state == SCORE:
+				elif state == SCORE:
 					scores.write(json.dumps(parsed) + '\n')
-
+				elif state == COVER:
+					coversheet = parsed['page'] + ' ' + parsed['section']
 				if message:
 					print('   ' + message)
 
@@ -122,12 +126,21 @@ def process_file(file_path, roster, reprocess=False, perfect=False, mapper=None)
 		# Skip this file next time
 		with open(os.path.join('tmp', 'finished', file_path_hash), 'w') as f:
 			f.write('')
+		# If there was a cover sheet, record that it is completed
+		if coversheet is not None:
+			with open(os.path.join('tmp', 'covers', coversheet), 'w') as f:
+				f.write('')
 
 def collate(uins_path, scores_path):
 	df = load_data(uins_path)
 	needed_cols = ['exam', 'UIN', 'name', 'netid']
 	if df.empty:
 		df = pd.DataFrame(columns=needed_cols)
+	unscored = df.netid.isin(['_unused', '_broken'])
+	# Show initial stats and then get rid of the unscored exams
+	print('Total exams seen: %d' % len(df))
+	print('Unused exams (blank + broken seats): %d' % sum(unscored))
+	df = df[~unscored]
 	df = df.drop_duplicates(['netid'])
 	df = df.drop_duplicates(['exam'])
 

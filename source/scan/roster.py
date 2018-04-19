@@ -58,6 +58,10 @@ class Roster(object):
 		raise TypeError('Cannot open %s due to format issue' % path)
 
 	def match(self, uin):
+		if uin == 9*'0': # Means an unused exam, typically blank or otherwise spoilt.
+			return {'UIN':uin, 'name':'unused', 'netid':'_unused'}
+		if uin == 9*'9': # Means the assigned seat was broken
+			return {'UIN':uin, 'name':'broken', 'netid':'_broken'}
 		matches = self.roster[self.roster.UIN==uin]
 		if len(matches) == 0:
 			num_matching_digits = self.roster.UIN.apply(lambda x: change_transpose_distance(x, uin))

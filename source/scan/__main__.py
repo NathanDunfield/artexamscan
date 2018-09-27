@@ -108,7 +108,7 @@ def process_file(file_path, roster, reprocess=False, perfect=False, mapper=None)
 	with open(os.path.join('tmp', 'uins', '%s.json' % file_path_hash), 'w') as uins:
 		with open(os.path.join('tmp', 'scores', '%s.json' % file_path_hash), 'w') as scores:
 			for state, parsed, message in results:
-				print(state, parsed)
+				#print(state, parsed)
 				if state == ERROR:
 					error_count += 1
 				elif state == UIN:
@@ -133,6 +133,7 @@ def process_file(file_path, roster, reprocess=False, perfect=False, mapper=None)
 
 def collate(uins_path, scores_path):
 	df = load_data(uins_path)
+	df = df.drop_duplicates()
 	needed_cols = ['exam', 'UIN', 'name', 'netid']
 	if df.empty:
 		df = pd.DataFrame(columns=needed_cols)
@@ -202,9 +203,9 @@ if __name__ == '__main__':
 	print('%d exams with incomplete information.' % num_incomplete)
 	print('%d students in roster without an exam assigned.' % len(unmatched))
 
-	if num_incomplete:
-		print('\tProcess more files and/or deal with any errors to begin report generation.')
-		exit(0)
+	#if num_incomplete:
+	#	print('\tProcess more files and/or deal with any errors to begin report generation.')
+    #	exit(0)
 
 	print('Saving results to "%s".' % args.results)
 	results.to_csv(args.results, index=False)

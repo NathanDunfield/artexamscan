@@ -187,6 +187,9 @@
 \define@key{examspec}{examnum}{\def\nmd@examnum{#1}}
 \define@key{examspec}{page}{\def\nmd@exampage{#1}}
 \define@key{examspec}{pagemax}{\def\nmd@exampagemax{#1}}
+\define@key{examspec}{section}{\def\nmd@stackcoversection{#1}}
+\define@key{examspec}{problem}{\def\nmd@stackcoverproblem{#1}}
+
 
 % Arguments are pagenum and pagemax
 \newcommand{\pagewithoverlay}{
@@ -228,4 +231,25 @@
     \setkeys{examspec}{page=\pagenum, pagemax=\pagemax, room=#2, examnum=#3}
     \pagewithoverlay
   }
+}
+
+% Expand the current TikZ picture to fill the whole page.  Origin of
+% coordinates will be in the center.
+
+\newcommand{\stackcoversheet}[1][]{
+  \setkeys{examspec}{#1}
+  \begin{tikzpicture}
+    % Half the size of US letter paper, in centimeters
+    \coordinate (A) at (10.78,13.96); 
+    \draw[white] ($-1*(A)$) rectangle (A);
+    \node at (0, 10) {\Huge \nmd@stackcoversection: \nmd@stackcoverproblem};
+    %
+    \begin{scope}[scale=0.997, shift={(-10.795, -13.98)}]
+       \sbox{\nmd@qrsavedbox}{\nmd@qrcode{\nmd@stackcoversection,\nmd@exampage}}
+       \node at (1.5, 1.5) {\usebox{\nmd@qrsavedbox}};
+       \node at (20, 1.5) {\usebox{\nmd@qrsavedbox}};
+    \end{scope}
+  \end{tikzpicture}
+
+  \pagebreak
 }

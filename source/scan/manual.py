@@ -42,8 +42,11 @@ def manual_process_page(page_path, roster):
 		except examscanuiuc.scan.ScoreReadError:
 			uin = input('Enter correct UIN: ')
 			if uin == '': return False
-
-		matched = roster.match(uin)
+		try:
+			matched = roster.match(uin)
+		except examscanuiuc.scan.errors.ScoreReadError:
+			uin = input('Enter correct UIN: ')
+			matched = roster.match(uin)
 		if matched['UIN'] != uin:
 			print('Entered UIN: %d matched %d of %s' % (uin, matched['UIN'], dict(matched)))
 			ans = input('Enter "Yes" to accept this correction: ')

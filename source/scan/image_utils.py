@@ -12,9 +12,13 @@ import numpy as np
 import scipy.misc
 import skimage, skimage.filters, skimage.transform, skimage.morphology
 
-def images_from_pdf(file_path, rotate=True):
+def images_from_pdf(file_path, rotate=True, extra_flags=None):
 	directory = tempfile.mkdtemp()
-	subprocess.call(['pdfimages', '-tiff', file_path, os.path.join(directory, 'im')])
+	command = ['pdfimages', '-tiff']
+	if extra_flags is not None:
+		command += extra_flags
+	command += [file_path, os.path.join(directory, 'im')]
+	subprocess.call(command)
 	images = [scipy.misc.imread(file) for file in glob.glob(os.path.join(directory, 'im*.tif'))]
 	if rotate:
 		images = [image[::-1, ::-1] for image in images]
@@ -23,6 +27,11 @@ def images_from_pdf(file_path, rotate=True):
 
 def image_from_pdf(file_path, rotate=True):
 	images = images_from_pdf(file_path, rotate)
+	assert(len(images) == 1)
+	return images[0]
+
+def first_image_from_pdf(file_path, rotate=True):
+	images = images_from_pdf(file_path, rotate, extra_flags=['-l', '1'])
 	assert(len(images) == 1)
 	return images[0]
 

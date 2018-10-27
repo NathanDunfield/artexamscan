@@ -4,5 +4,4 @@
 import examscanuiuc
 
 if __name__ == '__main__':
-	examscanuiuc.doc.open_documentation(verbose=True)
-
+    examscanuiuc.doc.open_documentation(verbose=True)

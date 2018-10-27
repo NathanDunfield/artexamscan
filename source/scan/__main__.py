@@ -1,4 +1,3 @@
-
 import time
 import os, json, hashlib, glob
 import pandas as pd
@@ -133,10 +132,11 @@ def process_file(file_path, roster, reprocess=False, perfect=False, mapper=None)
 
 def collate(uins_path, scores_path):
     df = load_data(uins_path)
-    df = df.drop_duplicates()
-    needed_cols = ['exam', 'UIN', 'name', 'netid']
     if df.empty:
+        needed_cols = ['exam', 'UIN', 'name', 'netid']
         df = pd.DataFrame(columns=needed_cols)
+    else:
+        df = df.drop_duplicates()
     unscored = df.netid.isin(['_unused', '_broken'])
     # Show initial stats and then get rid of the unscored exams
     print('Total exams seen: %d' % len(df))
@@ -149,7 +149,13 @@ def collate(uins_path, scores_path):
     if not ds.empty:
         ds = ds[['exam', 'page', 'score']]
         ds = ds.drop_duplicates()
-        ds = ds.pivot(index='exam', columns='page', values='score')
+        dg = ds.groupby(['exam', 'page'])
+        # Check whether we have different scores for the same page
+        duplicates = dg.filter(lambda scores:len(scores) > 1)
+        if len(duplicates) > 0:
+            print('WARNING: Inconsistent scores read, keeping max')
+            print(duplicates)
+        ds = dg.agg(max).reset_index().pivot(index='exam', columns='page', values='score')
 
     ds['score'] = ds.sum(axis=1)
     ds.score.astype(int)

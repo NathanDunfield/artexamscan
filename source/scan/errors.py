@@ -1,7 +1,6 @@
 
 class CouldNotGetQRCode(Exception):
-	pass
+    pass
 
 class ScoreReadError(Exception):
-	pass
-
+    pass

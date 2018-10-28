@@ -30,6 +30,7 @@ setup(
 		'artexamscan',
 		'artexamscan.demo',
 		'artexamscan.doc',
+                'artexamscan.tag',
 		'artexamscan.scan',
 		],
 	package_dir={'artexamscan': source_directory},

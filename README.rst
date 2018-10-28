@@ -4,7 +4,7 @@ Installation
 This code under active development at the moment, so it is best to
 install from source into your preferred version of Python 3::
 
-  python3 -m pip install https://bitbucket.org/nathan_dunfield/artexamscan/get/tip.zip
+  python3 -m pip install -U https://bitbucket.org/nathan_dunfield/artexamscan/get/tip.zip
 
 ArtExamScan requires pdfimages, pdftoppm, and zbar, as well as
 possibly pdftk.  On Linux systems derived from Debian (e.g. Ubuntu),

@@ -10,8 +10,13 @@ try:
 except ImportError:  # Python 3.
     imap = map
 
-from .scan import Roster, PDFPages, image_from_pdf, read_page_id, read_uin, read_tickbox
-from .scan import ScoreReadError, CouldNotGetQRCode, GarbageScan
+from .roster import Roster
+from .pdf import PDFPages
+from .image_utils import image_from_pdf
+from .qr_code import read_page_id
+from .uin import read_uin
+from .tickbox import read_tickbox
+from .errors import ScoreReadError, CouldNotGetQRCode, GarbageScan
 from .manual import manual_process_page
 
 ERROR, UIN, SCORE, COVER = 'Error', 'UIN', 'Score', 'Cover'

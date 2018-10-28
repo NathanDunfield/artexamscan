@@ -3,7 +3,9 @@ import examscanuiuc
 from six.moves import input
 
 def default_open(file_path):
-    if sys.platform.startswith('darwin'):
+    if 'JUPYTER_SERVER_URL' in os.environ:
+        pass
+    elif sys.platform.startswith('darwin'):
         subprocess.call(['open', file_path])
     elif os.name == 'nt':
         os.startfile(file_path)

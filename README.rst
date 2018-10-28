@@ -24,8 +24,8 @@ reasonably recent TeX setup and the files available `here
 <https://bitbucket.org/nathan_dunfield/artexamscan/src/default/latex/tagging/>`_;
 see the README file there for details.
 
-For the mechanics of hand grading the exams see the `grading
-instructions <https://bitbucket.org/nathan_dunfield/artexamscan/src/default/latex/grader_instructions/grader_instructions.pdf>`_
+For the mechanics of hand grading the exams see the `grading instructions
+<https://bitbucket.org/nathan_dunfield/artexamscan/raw/default/latex/grader_instructions/grader_instructions.pdf>`_
 
 After scanning the exams (which must be done rotated 180 degrees), do
 something like::

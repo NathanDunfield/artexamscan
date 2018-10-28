@@ -2,8 +2,8 @@ import os
 import pandas as pd
 from heapq import nsmallest
 
-from examscanuiuc.scan.constants import INFTY
-from examscanuiuc.scan.errors import ScoreReadError
+from .scan.constants import INFTY
+from .scan.errors import ScoreReadError
 
 def change_transpose_distance(s1, s2):
     ''' Return the minimal number of changes and transpositions needed to get from s1 to s2. '''

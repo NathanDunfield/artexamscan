@@ -3,9 +3,9 @@ Reading QR codes and identifying pages.
 '''
 
 import libzbar as zb
-from examscanuiuc.scan import image_utils
-from examscanuiuc.scan.errors import CouldNotGetQRCode
-from examscanuiuc.scan.constants import PAPER
+from .scan import image_utils
+from .scan.errors import CouldNotGetQRCode
+from .scan.constants import PAPER
 
 def make_square(image):
     h, w = image.shape

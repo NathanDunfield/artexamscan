@@ -1,17 +1,16 @@
 
-''' A simple starting point for examscanuiuc. '''
+''' A simple starting point for artexamscan. '''
 
-import examscanuiuc
+import artexamscan
 
 def main():
-    ''' Describe how to start examscanuiuc. '''
+    ''' Describe how to start artexamscan. '''
 
-    print('examscanuiuc %s' % examscanuiuc.__version__)
+    print('artexamscan %s' % artexamscan.__version__)
     print('Get started by using:')
-    print(' > python -m examscanuiuc.doc                 # To open documentation.')
-    print(' > python -m examscanuiuc.demo                # To copy demo examples here.')
-    print(' > python -m examscanuiuc.tag [options]       # To tag an exam.')
-    print(' > python -m examscanuiuc.scan [options]      # To analyse some scans.')
+    print(' > python -m artexamscan.doc                 # To open documentation.')
+    print(' > python -m artexamscan.demo                # To copy demo examples here.')
+    print(' > python -m artexamscan.scan [options]      # To analyse some scans.')
 
 if __name__ == '__main__':
     main()

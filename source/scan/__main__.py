@@ -10,10 +10,9 @@ try:
 except ImportError:  # Python 3.
     imap = map
 
-from examscanuiuc.scan import Roster, PDFPages, image_from_pdf, read_page_id, read_uin, read_tickbox
-from examscanuiuc.scan import ScoreReadError, CouldNotGetQRCode, GarbageScan
+from .scan import Roster, PDFPages, image_from_pdf, read_page_id, read_uin, read_tickbox
+from .scan import ScoreReadError, CouldNotGetQRCode, GarbageScan
 from .manual import manual_process_page
-import examscanuiuc.scan.report
 
 ERROR, UIN, SCORE, COVER = 'Error', 'UIN', 'Score', 'Cover'
 
@@ -236,6 +235,6 @@ if __name__ == '__main__':
 
     if args.template is not None:
         print('Generating report:')
-        examscanuiuc.scan.report.main(results, args.template, args.reports)
+        scan.report.main(results, args.template, args.reports)
     else:
         print('\tRerun with --template to generate student reports.')

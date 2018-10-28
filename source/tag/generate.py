@@ -8,7 +8,7 @@ from reportlab.lib.utils import ImageReader
 from reportlab.lib.units import inch, cm
 import qrcode
 
-from examscanuiuc.tag.pdf import images_from_pdf
+from artexamscan.tag.pdf import images_from_pdf
 
 def parse_file(file_path):
     with open(file_path) as config_input:

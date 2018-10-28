@@ -1,5 +1,5 @@
 
-''' Stores the documentation for examscanuiuc. '''
+''' Stores the documentation for artexamscan. '''
 
 import os
 import sys

@@ -42,8 +42,13 @@ def check_for_scan_errors(image):
 
     2. Thick black streaks across the page, coming from some grounding fault.
     """
-    if sum(image[:, 300:-300].sum(axis=1)==0) > 100:
+    if sum(image[:, 300:-300].sum(axis=1)==0) > 150:
         raise GarbageScan('SKIPPING: Page has black streaks across it')
+    tail = image[-200:]
+    height, width = tail.shape
+    density = (tail==0).sum()/(1.0*height*width)
+    if density > 0.25:
+        raise GarbageScan('SKIPPING: Pagesize incorrectly detected')
 
 def process_page(file_name, page_num, page_path, roster):
     image = image_from_pdf(page_path)

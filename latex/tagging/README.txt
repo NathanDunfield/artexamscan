@@ -1,11 +1,9 @@
 Tagging exams via LaTeX
 =======================
 
-This directory describes an alternate way of adding the QR tags and
-grader boxes to an exam. Instead of using Python combined with several
-add-on packages, it requires only a reasonably recent TeX
-setup. Provided you use LuaLaTeX, you can tag 1500+ pages/minute using
-this method.
+This directory describes how to add the QR tags and grader boxes to an
+exam. It requires only a reasonably recent TeX setup. Provided you use
+LuaLaTeX, you can tag 1,500+ pages/minute using this method.
 
 An example
 ==========

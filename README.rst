@@ -1,27 +1,20 @@
+ArtExamScan
+===========
 
-ExamScanUIUC is a python package for adding and analysing tags on exams.
-It was written by Mark C. Bell and is a complete rewrite of Nathan Dunfield's unpublished "examautomat" program, which uses the same basic strategy for processing hand-graded exams in bulk.
-It can be run as a Python 2 or Python 3 module.
+ArtExamScan is a Python package for bulk processing of artisanally
+hand-graded exams.
 
 Installation
 ============
 
-`ExamScanUIUC <https://pypi.python.org/examscanuiuc>`_ is available on the `Python Package Index <https://pypi.python.org>`_.
-The preferred method for installing the latest stable release is to use `pip <http://pip.readthedocs.org/en/latest/installing.html>`_ (included in Python 2.7.9 and Python 3.4 by default)::
+This code under active development at the moment, so it is best to
+install from source into your preferred version of Python 3::
 
-	> python -m pip install examscanuiuc --user --upgrade
+  python3 -m pip install mercurial
+  python3 -m pip install hg+http://exam
 
-ExamScanUIUC requires pdfimages, pdftoppm and zbar.
-
-.. warning::
-	The packages used by ExamScanUIUC require an updated version of the `six <https://pypi.org/project/six/>`_ package.
-	Since this is included as an Extra package in the included system Python on OS X, Mac users may need to:
-	
-	- install Python manually,
-	- modify their ``PYTHONPATH`` environment variable, or
-	- install ExamScanUIUC within ``virtualenv``
-	
-	as described `here <http://stackoverflow.com/questions/29485741/unable-to-upgrade-python-six-package-in-mac-osx-10-10-2>`_.
+ExamScanUIUC requires pdfimages, pdftoppm, and zbar, as well as
+possibly pdftk.  
 
 Usage
 =====
@@ -38,15 +31,18 @@ For full examples of usage, see the ExamScanUIUC documentation, which can be ope
 
 	> python -m examscanuiuc.doc
 
-Development
-===========
 
-The latest development version of ExamScanUIUC is available from `BitBucket <https://bitbucket.org/Mark_Bell/examscanuiuc>`_.
-Alternatively, you can clone the mercurial repository directly using the command::
+History
+=======
 
-	> hg clone https://bitbucket.org/mark_bell/examscanuiuc
+The basic strategy used here originated in 2016 in Nathan Dunfield's
+unpublished "examautomat" program.  In 2017, Marc C Bell did a
+complete rewrite as `ExamScanUIUC
+<https://bitbucket.org/Mark_Bell/examscanuiuc>`_.  This current
+version derives from both sources, and is maintained by Nathan.  The
+authors thank Pat Szuta and Malik Obeidin for their help on this project.
 
-And then install by using::
+License
+=======
 
-	> python setup.py install --user
-
+This code is released under the open-source MIT 3-clause license.

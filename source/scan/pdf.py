@@ -1,4 +1,3 @@
-
 '''
 Scanned pages are upside-down PDFs.
 '''

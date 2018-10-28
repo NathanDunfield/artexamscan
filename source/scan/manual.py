@@ -1,4 +1,3 @@
-
 import os, sys, json, subprocess
 import examscanuiuc
 from six.moves import input

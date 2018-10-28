@@ -7,4 +7,4 @@ from . image_utils import image_from_pdf
 from . qr_code import read_page_id
 from . uin import read_uin
 from . tickbox import read_tickbox
-from . errors import ScoreReadError, CouldNotGetQRCode
+from . errors import ScoreReadError, CouldNotGetQRCode, GarbageScan

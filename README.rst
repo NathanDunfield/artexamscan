@@ -24,6 +24,9 @@ reasonably recent TeX setup and the files available `here
 <https://bitbucket.org/nathan_dunfield/artexamscan/src/default/latex/tagging/>`_;
 see the README file there for details.
 
+For the mechanics of hand grading the exams see the `grading
+instructions <https://bitbucket.org/nathan_dunfield/artexamscan/src/default/latex/grader_instructions/grader_instructions.pdf>`_
+
 After scanning the exams (which must be done rotated 180 degrees), do
 something like::
 
@@ -35,12 +38,13 @@ to read in all the scores, which are eventually dumped it "results.csv".
 History
 =======
 
-The basic strategy used here originated in 2016 in Nathan Dunfield's
-unpublished "examautomat" program.  In 2017, Marc C Bell did a
+The basic strategy used here originated Nathan Dunfield's unpublished
+"examautomat" program written in 2016.  In 2017, Marc C Bell did a
 complete rewrite as `ExamScanUIUC
 <https://bitbucket.org/Mark_Bell/examscanuiuc>`_.  This current
 version derives from both sources, and is maintained by Nathan.  The
-authors thank Pat Szuta and Malik Obeidin for their help on this project.
+authors thank Pat Szuta and Malik Obeidin for their help on this
+project.
 
 
 License

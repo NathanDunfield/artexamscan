@@ -1,6 +1,10 @@
 import os, sys, json, subprocess
 from six.moves import input
-from . import scan
+from .image_utils import image_from_pdf
+from .qr_code import read_page_id
+from .uin import read_uin
+from .tickbox import read_tickbox
+from .errors import CouldNotGetQRCode, ScoreReadError
 
 def default_open(file_path):
     if 'JUPYTER_SERVER_URL' in os.environ:
@@ -16,18 +20,18 @@ def manual_process_page(page_path, roster):
     print('Processing %s' % os.path.basename(page_path))
     default_open(page_path)
 
-    image = scan.image_from_pdf(page_path)
+    image = image_from_pdf(page_path)
     try:
-        parts = scan.read_page_id(image).split(',')
+        parts = read_page_id(image).split(',')
         extras = dict()
         if len(parts) == 7:
-            term, CRN, exam_name, exam_version, exam_num, exam_pagenum, page_max = scan.read_page_id(image).split(',')
+            term, CRN, exam_name, exam_version, exam_num, exam_pagenum, page_max = read_page_id(image).split(',')
             parts = [exam_num, exam_pagenum, page_max]
         if len(parts) == 9:
-            term, course, CRN, instr_netid, exam_name, exam_version, exam_num, exam_pagenum, page_max = scan.read_page_id(image).split(',')
+            term, course, CRN, instr_netid, exam_name, exam_version, exam_num, exam_pagenum, page_max = read_page_id(image).split(',')
             parts = [exam_num, exam_pagenum, page_max]
         exam_num, exam_pagenum, page_max = [int(p) for p in parts]
-    except scan.CouldNotGetQRCode:
+    except CouldNotGetQRCode:
         print('Could not read QR code.')
         exam_num = input('Enter exam number: ')
         if exam_num == '': return False
@@ -39,13 +43,13 @@ def manual_process_page(page_path, roster):
 
     if exam_pagenum == 1:
         try:
-            uin = scan.read_uin(image)
-        except scan.ScoreReadError:
+            uin = read_uin(image)
+        except ScoreReadError:
             uin = input('Enter correct UIN: ')
             if uin == '': return False
         try:
             matched = roster.match(uin)
-        except scan.errors.ScoreReadError:
+        except ScoreReadError:
             uin = input('Enter correct UIN: ')
             matched = roster.match(uin)
         if matched['UIN'] != uin:
@@ -59,9 +63,9 @@ def manual_process_page(page_path, roster):
             uins.write(json.dumps(parsed) + '\n')
     else:
         try:
-            score, quality = scan.read_tickbox(image)
+            score, quality = read_tickbox(image)
             if score > page_max: raise ValueError('Tried to award %d on %d point question.' % (score, page_max))
-        except scan.ScoreReadError:
+        except ScoreReadError:
             score = input('Enter correct score: ')
             if score == '': return False
             score, quality = int(score), 10

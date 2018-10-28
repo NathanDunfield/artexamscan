@@ -11,7 +11,7 @@ except ImportError:  # Python 3.
     imap = map
 
 from examscanuiuc.scan import Roster, PDFPages, image_from_pdf, read_page_id, read_uin, read_tickbox
-from examscanuiuc.scan import ScoreReadError, CouldNotGetQRCode
+from examscanuiuc.scan import ScoreReadError, CouldNotGetQRCode, GarbageScan
 from .manual import manual_process_page
 import examscanuiuc.scan.report
 
@@ -34,9 +34,21 @@ def load_data(directory):
     if len(ans) == 0: return pd.DataFrame()
     return pd.DataFrame(ans)
 
+def check_for_scan_errors(image):
+    """
+    There are two kinds of common errors on our copiers:
+
+    1. Wrong paper size detected, resulting in grey strips at bottom of page.
+
+    2. Thick black streaks across the page, coming from some grounding fault.
+    """
+    if sum(image[:, 300:-300].sum(axis=1)==0) > 100:
+        raise GarbageScan('SKIPPING: Page has black streaks across it')
+
 def process_page(file_name, page_num, page_path, roster):
     image = image_from_pdf(page_path)
     try:
+        check_for_scan_errors(image)
         parts = read_page_id(image).split(',')
         if len(parts) == 2: # Coversheet
             return COVER, {'section':parts[0], 'page':parts[1]}, ''
@@ -69,12 +81,13 @@ def process_page(file_name, page_num, page_path, roster):
         this_exam_dir = os.path.join('tmp', 'exams', str(exam_num))
         if not os.path.exists(this_exam_dir): os.makedirs(this_exam_dir)
         shutil.copy(page_path, os.path.join(this_exam_dir, '%d.pdf' % exam_pagenum))
-    except (CouldNotGetQRCode, ScoreReadError, ValueError) as error:
+    except (CouldNotGetQRCode, ScoreReadError, GarbageScan, ValueError) as error:
         state = ERROR
         parsed = None
         error_str = error if isinstance(error, str) else error.args[0]
         message = 'Error on page %d of %s: ' % (page_num, file_name) + error_str
-        shutil.copy(page_path, os.path.join('tmp', 'errors', '%s_%d.pdf' % (file_name, page_num)))
+        if not isinstance(error, GarbageScan):
+            shutil.copy(page_path, os.path.join('tmp', 'errors', '%s_%d.pdf' % (file_name, page_num)))
 
     return state, parsed, message
 

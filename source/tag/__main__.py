@@ -8,8 +8,8 @@ try:
 except ImportError:
     from io import StringIO
 
-from examscanuiuc.tag.generate import main, parse_file
-from examscanuiuc.tag.seat import ExamSeat, Room
+from artexamscan.tag.generate import main, parse_file
+from artexamscan.tag.seat import ExamSeat, Room
 
 if __name__ == '__main__':
     import argparse

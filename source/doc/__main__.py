@@ -1,7 +1,7 @@
 
-''' Opens the examscanuiuc documentation. '''
+''' Opens the artexamscan documentation. '''
 
-import examscanuiuc
+import artexamscan
 
 if __name__ == '__main__':
-    examscanuiuc.doc.open_documentation(verbose=True)
+    artexamscan.doc.open_documentation(verbose=True)

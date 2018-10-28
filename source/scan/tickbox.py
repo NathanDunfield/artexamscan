@@ -4,9 +4,9 @@ Assumes a 400dpi images.
 '''
 
 import numpy as np
-from examscanuiuc.scan import image_utils
-from examscanuiuc.scan.errors import ScoreReadError
-from examscanuiuc.scan.constants import PAPER
+from .scan import image_utils
+from .scan.errors import ScoreReadError
+from .scan.constants import PAPER
 
 def extract_tickbox(image):
     # Slice off the bottom of the page and rotate to make horizontal

@@ -10,9 +10,14 @@ ArtExamScan requires pdfimages, pdftoppm, and zbar, as well as
 possibly pdftk.  On Linux systems derived from Debian (e.g. Ubuntu),
 do::
 
-  apt-get install libzbar-dev poppler-utils pdftk
+  apt-get install libzbar-dev poppler-utils
 
-before executing the above command.
+before executing the above command.  You can test if your installation
+was successful by doing::
+
+  python3 -m artexamscan.demo    # Creates "demo" folder with sample scans
+  cd demo
+  python3 -m artexamscan.scan --roster=roster.xlsx scan.pdf
 
 
 Usage
@@ -32,7 +37,10 @@ something like::
 
   python3 -m artexamscan.scan --roster=roster.csv scans/*.pdf
 
-to read in all the scores, which are eventually dumped it "results.csv".
+to read in all the scores, which are eventually dumped it
+"results.csv".
+
+
 
 
 History

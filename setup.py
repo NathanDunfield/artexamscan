@@ -47,5 +47,6 @@ setup(
 		'pandas',
 		'xlrd',
 		'libzbar-cffi',
+                'PyPDF2',
 		]
 	)

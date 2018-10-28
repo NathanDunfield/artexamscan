@@ -1,0 +1,17 @@
+# This is a sample build configuration for Python.
+# Check our guides at https://confluence.atlassian.com/x/x4UWN for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: python:3.7-stretch
+
+pipelines:
+  default:
+    - step:
+        script: # Modify the commands below to build your repository.
+          - apt-get update
+          - apt-get install libzbar-dev poppler-utils
+          - python3 -m pip install -U .
+          - python3 -m artexamscan.demo  
+          - cd demo
+          - python3 -m artexamscan.scan --roster=roster.xlsx scan.pdf

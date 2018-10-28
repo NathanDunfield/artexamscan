@@ -47,7 +47,7 @@ def winner(densities, column):
     return data[0][-1], data[0][column], data[0][column] / data[1][column]
 
 def most_solid_big(densities):
-    return max([(d[1] / d[0], d[-1]) for d in densities if d[0] > 0.25 or d[1] > 0.17])
+    return max([(d[1] / d[0], d[-1]) for d in densities if d[0] > 0.21 or d[1] > 0.15])
 
 def read_tickbox(image):
     tb = extract_tickbox(image)
@@ -57,7 +57,7 @@ def read_tickbox(image):
     score_big, density_big, ratio_big = winner(densities, 1)
     max_ratio = max(ratio_small, ratio_big)
 
-    if density_small < 0.25 and density_big < 0.17:
+    if density_small < 0.21 and density_big < 0.15:
         raise ScoreReadError('Boxes nearly blank')
 
     most_solid, score_solid = most_solid_big(densities)

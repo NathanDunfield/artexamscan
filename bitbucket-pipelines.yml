@@ -10,7 +10,7 @@ pipelines:
     - step:
         script: # Modify the commands below to build your repository.
           - apt-get update
-          - apt-get install libzbar-dev poppler-utils
+          - apt-get install -y libzbar-dev poppler-utils
           - python3 -m pip install -U .
           - python3 -m artexamscan.demo  
           - cd demo

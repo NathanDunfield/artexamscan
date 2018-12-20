@@ -1,0 +1,37 @@
+% When grading 1,000s of exams, it can be nice to have stacks labeled
+% e.g. by discussion section and problem. This file provides handy but
+% entirely optional cover sheets for such stacks.  They have QR codes,
+% but just so the program can see that there is nothing to do for
+% these pages.
+
+\documentclass{tickyoverlay}
+\begin{document}
+%\examdefaults{problem={Page 1, UIN page}, page=1}
+%\examdefaults{problem={Page 2, Problems 1--2}, page=2}
+%\examdefaults{problem={Page 3, Problems 3--4}, page=3}
+%\examdefaults{problem={Page 4, Problems 5--6}, page=4}
+%\examdefaults{problem={Page 5, Problem 7}, page=5}
+%\examdefaults{problem={Page 6, Problem 8}, page=6}
+%\examdefaults{problem={Page 7, Problems 9--10}, page=7}
+%\examdefaults{problem={Page 8, Problem 11}, page=8}
+%\examdefaults{problem={Page 9, Problem 12}, page=9}
+%\examdefaults{problem={Page 10, Problem 13}, page=10}
+%\examdefaults{problem={Page 11, Problem 14}, page=11}
+%\examdefaults{problem={Page 12, Problems 15--16}, page=12}
+\examdefaults{problem={Page 13, Problems 17--18}, page=13}
+
+
+%\foreach \secname in {
+%  AD1-AD2-AD3, ADA-ADB, ADC-ADD, ADE-ADF, ADH-ADI, ADK-ADL, ADG-ADO, ADM-ADN,
+%  BDA-BDB, BDD-BDN, BDE-BDO, BDF-BDM, BDG-BDH, BDI-BDJ, BDK-BDL, BDC-CDG,
+%  CD@-CDO, CDA-CDI, CDB-CDC, CDE-CDF, CDH-CDP, CDJ-CDK, CDL-CDM,
+%  DDA-DDF, DDB-DDC, DDD-DDE}{
+%  \stackcoversheet[section=\secname]
+%}
+
+\foreach \secname in {
+  ADConf, BDConf, CDConf, DDConf}{
+  \stackcoversheet[section=\secname]
+}
+
+\end{document}

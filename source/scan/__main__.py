@@ -176,7 +176,7 @@ def collate(uins_path, scores_path):
         duplicates = dg.filter(lambda scores:len(scores) > 1)
         if len(duplicates) > 0:
             print('WARNING: Inconsistent scores read, keeping max')
-            print(duplicates)
+            print(duplicates.sort_values('exam'))
         ds = dg.agg(max).reset_index().pivot(index='exam', columns='page', values='score')
 
     ds['score'] = ds.sum(axis=1)

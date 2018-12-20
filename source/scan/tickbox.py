@@ -62,14 +62,19 @@ def read_tickbox(image):
 
     most_solid, score_solid = most_solid_big(densities)
 
+    ans = None
     if most_solid > 0.7 and score_solid == score_big and ratio_big > 1.2:
-        return score_big, ratio_big
-    if score_small == score_big and max_ratio > 1.2:
-        return score_small, max_ratio
-    if ratio_small > 1.2:
-        return score_small, ratio_small
-    if ratio_big > 1.3:
-        return score_big, ratio_big
-    if ratio_small > 1.1 and density_small > 0.5:
-        return score_small, ratio_small
-    raise ScoreReadError('Ambiguous')
+        ans = score_big, ratio_big
+    elif score_small == score_big and max_ratio > 1.2:
+        ans =  score_small, max_ratio
+    elif ratio_small > 1.2:
+        ans = score_small, ratio_small
+    elif ratio_big > 1.3:
+        ans = score_big, ratio_big
+    elif ratio_small > 1.1 and density_small > 0.5:
+        ans = score_small, ratio_small
+    if ans is None:
+        raise ScoreReadError('Ambiguous')
+    elif ans[0] == 10 and ans[1] < 1.6:
+        raise ScoreReadError('Boxes nearly blank')
+    return ans

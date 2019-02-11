@@ -1,8 +1,8 @@
 Installation
 ============
 
-This code under active development at the moment, so it is best to
-install from source into your preferred version of Python 3::
+It is best to install from source into your preferred version of
+Python 3::
 
   python3 -m pip install -U https://bitbucket.org/nathan_dunfield/artexamscan/get/tip.zip
 

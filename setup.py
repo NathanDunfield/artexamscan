@@ -43,6 +43,7 @@ setup(
 		'six',
 		'numpy',
 		'scipy',
+                'imageio',
 		'scikit-image',
 		'pandas',
 		'xlrd',

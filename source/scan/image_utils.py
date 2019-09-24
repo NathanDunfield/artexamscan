@@ -10,6 +10,7 @@ from math import pi
 import warnings
 import numpy as np
 import scipy.misc
+import imageio
 import skimage, skimage.filters, skimage.transform, skimage.morphology
 
 def images_from_pdf(file_path, rotate=True, extra_flags=None):
@@ -19,7 +20,7 @@ def images_from_pdf(file_path, rotate=True, extra_flags=None):
         command += extra_flags
     command += [file_path, os.path.join(directory, 'im')]
     subprocess.call(command)
-    images = [scipy.misc.imread(file) for file in glob.glob(os.path.join(directory, 'im*.tif'))]
+    images = [imageio.imread(file) for file in glob.glob(os.path.join(directory, 'im*.tif'))]
     if rotate:
         images = [image[::-1, ::-1] for image in images]
     shutil.rmtree(directory)

@@ -236,8 +236,9 @@ if __name__ == '__main__':
     #    exit(0)
 
     std_cols = ['name', 'netid', 'UIN', 'exam', 'term', 'CRN', 'exam_name', 'exam_version']
-    new_cols = [col for col in results.columns if col not in std_cols]
-    results = results[std_cols + new_cols]
+    cols = [col for col in std_cols if col in results.columns]
+    cols += [col for col in results.columns if col not in std_cols]
+    results = results[cols]
     results = results.sort_values('exam')
     results.set_index('exam', drop=False)
     print('Saving results to "%s".' % args.results)

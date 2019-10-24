@@ -235,6 +235,11 @@ if __name__ == '__main__':
     #    print('\tProcess more files and/or deal with any errors to begin report generation.')
     #    exit(0)
 
+    std_cols = ['name', 'netid', 'UIN', 'exam', 'term', 'CRN', 'exam_name', 'exam_version']
+    new_cols = [col for col in results.columns if col not in std_cols]
+    results = results[std_cols + new_cols]
+    results = results.sort_values('exam')
+    results.set_index('exam', drop=False)
     print('Saving results to "%s".' % args.results)
     results.to_csv(args.results, index=False)
 

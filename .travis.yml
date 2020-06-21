@@ -1,8 +1,8 @@
 language: python
 
 script:
-  - apt-get update
-  - apt-get install -y libzbar-dev poppler-utils
+  - sudo apt-get update
+  - sudo apt-get install -y libzbar-dev poppler-utils
   - python3 -m pip install -U .
   - python3 -m artexamscan.demo  
   - cd demo

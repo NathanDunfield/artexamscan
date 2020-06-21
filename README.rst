@@ -26,11 +26,11 @@ Usage
 The first step is to "tag" the exam PDF with the QR codes and grader
 score boxes that will eventually be scanned. This requires only a
 reasonably recent TeX setup and the files available `here
-<https://github.com/NathanDunfield/artexamscan/src/default/latex/tagging/>`_;
+<https://github.com/NathanDunfield/artexamscan/tree/master/latex/tagging>`_;
 see the README file there for details.
 
 For the mechanics of hand grading the exams see the `grading instructions
-<https://github.com/NathanDunfield/artexamscan/raw/default/latex/grader_instructions/grader_instructions.pdf>`_
+<https://github.com/NathanDunfield/artexamscan/raw/master/latex/grader_instructions/grader_instructions.pdf>`_
 
 After scanning the exams (which must be done rotated 180 degrees), do
 something like::
